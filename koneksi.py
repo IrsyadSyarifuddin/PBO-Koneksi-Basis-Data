@@ -3,10 +3,10 @@ import mysql.connector
 def connect_database(username, password):
     try:
         connection = mysql.connector.connect(
-            
-
-
-            
+            host="localhost",
+            user=username,
+            password=password,
+            database="steam_library"
         )
         return connection
 
