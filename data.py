@@ -1,13 +1,13 @@
 import mysql.connector
 import pandas as pd
 
-def get_data(database, table):
+def get_data(username,password,database, table):
     connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database=database,
-    )
+            host="localhost",
+            user=username,
+            password=password,
+            database=database
+        )
     cursor = connection.cursor()
 
     query = f"SELECT * FROM {table}"

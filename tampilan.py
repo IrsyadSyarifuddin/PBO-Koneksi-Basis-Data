@@ -66,7 +66,7 @@ class Ui:
             print("Koneksi berhasil!")
             self.connection_status = True
             self.update_connection_status()
-            data = get_data("steam_library", "produk")
+            data = get_data(username,password,"steam_library", "produk")
             self.display_table_tkinter(data)
             
         else:
