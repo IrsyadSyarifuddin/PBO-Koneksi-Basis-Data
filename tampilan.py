@@ -95,23 +95,19 @@ class Ui:
             self.label_status.config(text="Database Terputus")
     
     def display_table_tkinter(self, data):
-        # Clear existing table data
         self.treeview.delete(*self.treeview.get_children())
 
-        # Insert data into Treeview widget
         for index, row in data.iterrows():
-            values = list(row.values)  # Extract row values
+            values = list(row.values)  
             self.treeview.insert('', 'end', values=values)
 
     def open_add_form(self):
-        if self.connection_status:  # Check for successful database connection
+        if self.connection_status:  
             create_input_form(self, self.data_structure, self.on_submit_add)
         else:
             mb.showerror("Error", "Harap terhubung ke database terlebih dahulu!")
 
     def on_submit_add(self, data):
-        # Insert data into the database (assuming `insert_data` function exists)
         insert_data(self.entry_username.get(), self.entry_password.get(), "produk", data)
 
-        # Refresh table display
         self.connect_database()

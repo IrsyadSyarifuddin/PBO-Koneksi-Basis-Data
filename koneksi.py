@@ -28,7 +28,6 @@ def insert_data(username, password, table, data):
         return False
 
     try:
-        # Replace with your actual query construction
         cursor = connection.cursor()
         sql = f"INSERT INTO {table} ({','.join(data.keys())}) VALUES ({','.join(['%s' for _ in data.values()])})"
         val = tuple(data.values())
@@ -39,7 +38,7 @@ def insert_data(username, password, table, data):
         return True
     except Exception as e:
         print(f"Error inserting data: {str(e)}")
-        connection.rollback()  # Rollback changes on error
+        connection.rollback() 
         return False
     finally:
         close_database(connection)
