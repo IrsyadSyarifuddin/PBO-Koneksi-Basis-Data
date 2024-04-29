@@ -1,12 +1,20 @@
 import tkinter as tk
 from tkinter.ttk import Treeview 
-from koneksi import connect_database, close_database
-from data import get_data
+from koneksi import connect_database, close_database, insert_data, get_data
+import tkinter.messagebox as mb
+from input_data import create_input_form
 
 class Ui:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Koneksi Database")
+
+        #Colom pada tabel
+        self.data_structure = {
+            "name": str,
+            "genre": str,
+            "harga": int 
+        }
 
         # Label dan entry untuk username
         self.label_username = tk.Label(text="Username:")
@@ -22,14 +30,12 @@ class Ui:
 
         self.label_status = tk.Label(text="Database Terputus")
 
+        #tombol masukkan data
+        self.button_add = tk.Button(text="Tambah Data", command=self.open_add_form)
+
         # Tabel
         self.table_frame = tk.Frame(self.window)
-        
-
-        # Table label (initially empty)
-        self.table_label = tk.Label(self.table_frame, text="")
     
-
         # Menata layout
         self.label_username.grid(row=0, column=0)
         self.entry_username.grid(row=0, column=1)
@@ -38,10 +44,11 @@ class Ui:
         self.button_connect.grid(row=2, column=0)
         self.button_close.grid(row=2, column=1)
         self.label_status.grid(row=3, column=0, columnspan=2)
+        self.button_add.grid(row=4, column=0, columnspan=2)
         self.table_frame = tk.Frame(self.window)
-        self.table_frame.grid(row=4, column=0, columnspan=2)
+        self.table_frame.grid(row=5, column=0, columnspan=2)
 
-        
+        #layout Tabel
         self.treeview = tk.ttk.Treeview(self.table_frame, columns=["Produk ID", "Nama", "Genre","Harga"])
         self.treeview.column("#0", width = 0, stretch = "no")
         self.treeview.heading(0,text="produk ID")  
@@ -66,7 +73,7 @@ class Ui:
             print("Koneksi berhasil!")
             self.connection_status = True
             self.update_connection_status()
-            data = get_data(username,password,"steam_library", "produk")
+            data = get_data(username,password, "produk")
             self.display_table_tkinter(data)
             
         else:
@@ -95,3 +102,16 @@ class Ui:
         for index, row in data.iterrows():
             values = list(row.values)  # Extract row values
             self.treeview.insert('', 'end', values=values)
+
+    def open_add_form(self):
+        if self.connection_status:  # Check for successful database connection
+            create_input_form(self, self.data_structure, self.on_submit_add)
+        else:
+            mb.showerror("Error", "Harap terhubung ke database terlebih dahulu!")
+
+    def on_submit_add(self, data):
+        # Insert data into the database (assuming `insert_data` function exists)
+        insert_data(self.entry_username.get(), self.entry_password.get(), "produk", data)
+
+        # Refresh table display
+        self.connect_database()
